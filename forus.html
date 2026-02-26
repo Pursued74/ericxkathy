@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>for kathy 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --pink: #f9a8c9;
+    --pink-light: #fde8f1;
+    --pink-deep: #e8749e;
+    --green: #a8d8b0;
+    --green-light: #d4f0d8;
+    --green-deep: #6db87a;
+    --bg: #fff5f8;
+    --text: #3a2a30;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* floating petals bg */
+  .petals {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .petal {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50% 0 50% 0;
+    opacity: 0.25;
+    animation: fall linear infinite;
+  }
+  @keyframes fall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.25; }
+    90% { opacity: 0.25; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* ── PASSWORD SCREEN ── */
+  #lock-screen {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    animation: fadeIn 1s ease;
+  }
+  #lock-screen h1 {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 2rem;
+    color: var(--pink-deep);
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.5px;
+  }
+  #lock-screen p {
+    font-size: 0.85rem;
+    color: #b08090;
+    margin-bottom: 2rem;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+  .lock-box {
+    background: white;
+    border-radius: 24px;
+    padding: 2.5rem 2.5rem;
+    box-shadow: 0 8px 40px rgba(233, 116, 158, 0.15);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    min-width: 300px;
+  }
+  .heart-icon {
+    font-size: 2.5rem;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+  }
+  #pw-input {
+    border: 2px solid var(--pink-light);
+    border-radius: 50px;
+    padding: 0.75rem 1.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    color: var(--text);
+    outline: none;
+    text-align: center;
+    width: 100%;
+    transition: border-color 0.2s;
+    background: var(--bg);
+  }
+  #pw-input:focus { border-color: var(--pink-deep); }
+  #pw-input.shake {
+    animation: shake 0.4s ease;
+    border-color: #e07;
+  }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}
+  }
+  #unlock-btn {
+    background: linear-gradient(135deg, var(--pink-deep), #d46fa0);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 0.75rem 2.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 16px rgba(233,116,158,0.4);
+    letter-spacing: 0.3px;
+  }
+  #unlock-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(233,116,158,0.5); }
+  #unlock-btn:active { transform: translateY(0); }
+  #pw-hint {
+    font-size: 0.75rem;
+    color: #d4a0b0;
+    min-height: 1rem;
+  }
+
+  /* ── CHAT SCREEN ── */
+  #chat-screen {
+    display: none;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 420px;
+    padding: 1rem;
+    animation: slideUp 0.7s cubic-bezier(0.23,1,0.32,1);
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .chat-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .chat-header .subtitle {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #c090a8;
+    margin-bottom: 0.4rem;
+  }
+  .chat-header h2 {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 1.5rem;
+    color: var(--pink-deep);
+  }
+
+  .chat-window {
+    background: white;
+    border-radius: 28px;
+    padding: 1.5rem 1.2rem;
+    box-shadow: 0 8px 40px rgba(233,116,158,0.12);
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    position: relative;
+  }
+
+  .timestamp {
+    text-align: center;
+    font-size: 0.7rem;
+    color: #bca0b0;
+    letter-spacing: 0.5px;
+    margin: 0.3rem 0;
+    font-weight: 300;
+  }
+
+  .msg {
+    display: flex;
+    flex-direction: column;
+    max-width: 78%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .msg.visible { opacity: 1; }
+  .msg.me { align-self: flex-end; align-items: flex-end; }
+  .msg.her { align-self: flex-start; align-items: flex-start; }
+
+  .sender-name {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.2rem;
+    color: #b090a0;
+    text-transform: uppercase;
+  }
+  .msg.me .sender-name { color: var(--green-deep); }
+  .msg.her .sender-name { color: var(--pink-deep); }
+
+  .bubble {
+    padding: 0.65rem 1rem;
+    border-radius: 18px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: var(--text);
+    word-break: break-word;
+    position: relative;
+    min-height: 1.8rem;
+  }
+  .msg.me .bubble {
+    background: linear-gradient(135deg, var(--green-light), #c5eccc);
+    border-bottom-right-radius: 5px;
+  }
+  .msg.her .bubble {
+    background: linear-gradient(135deg, var(--pink-light), #fcd4e5);
+    border-bottom-left-radius: 5px;
+  }
+
+  /* typewriter cursor */
+  .bubble.typing::after {
+    content: '▋';
+    animation: blink 0.7s infinite;
+    font-size: 0.8rem;
+    color: #c090a0;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* typing indicator */
+  .typing-dots {
+    display: none;
+    align-self: flex-start;
+    align-items: center;
+    gap: 0;
+    padding: 0.7rem 1.1rem;
+    background: var(--pink-light);
+    border-radius: 18px;
+    border-bottom-left-radius: 5px;
+  }
+  .typing-dots span {
+    width: 6px; height: 6px;
+    background: var(--pink-deep);
+    border-radius: 50%;
+    margin: 0 2px;
+    display: inline-block;
+    animation: dot 1.2s infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dot {
+    0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}
+  }
+
+  /* restart btn */
+  #restart-btn {
+    display: none;
+    margin: 1.2rem auto 0;
+    background: none;
+    border: 2px solid var(--pink);
+    color: var(--pink-deep);
+    border-radius: 50px;
+    padding: 0.5rem 1.8rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  #restart-btn:hover { background: var(--pink); color: white; }
+
+  /* ending note */
+  #ending-note {
+    display: none;
+    text-align: center;
+    margin-top: 1rem;
+    font-family: 'Lora', serif;
+    font-style: italic;
+    color: var(--pink-deep);
+    font-size: 1rem;
+    animation: fadeIn 1s ease;
+  }
+</style>
+</head>
+<body>
+
+<!-- floating petals -->
+<div class="petals" id="petals"></div>
+
+<!-- PASSWORD SCREEN -->
+<div id="lock-screen">
+  <h1>something for you 🌸</h1>
+  <p>enter the password to open</p>
+  <div class="lock-box">
+    <div class="heart-icon">💌</div>
+    <input type="password" id="pw-input" placeholder="password..." autocomplete="off" />
+    <button id="unlock-btn">open it</button>
+    <span id="pw-hint"></span>
+  </div>
+</div>
+
+<!-- CHAT SCREEN -->
+<div id="chat-screen">
+  <div class="chat-header">
+    <div class="subtitle">oct 21 · where it all started</div>
+    <h2>our first conversation</h2>
+  </div>
+  <div class="chat-window" id="chat-window">
+    <!-- messages injected by JS -->
+    <div class="typing-dots" id="typing-dots">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+  <div id="ending-note">and the rest is history 🌿</div>
+  <button id="restart-btn">replay ↩</button>
+</div>
+
+<script>
+// ── PETALS ──
+const petalColors = ['#f9a8c9','#fde8f1','#a8d8b0','#d4f0d8','#e8749e'];
+const petalsEl = document.getElementById('petals');
+for (let i = 0; i < 18; i++) {
+  const p = document.createElement('div');
+  p.className = 'petal';
+  p.style.cssText = `
+    left: ${Math.random()*100}%;
+    top: ${Math.random()*100}%;
+    background: ${petalColors[Math.floor(Math.random()*petalColors.length)]};
+    width: ${6+Math.random()*10}px;
+    height: ${6+Math.random()*10}px;
+    animation-duration: ${8+Math.random()*14}s;
+    animation-delay: ${-Math.random()*14}s;
+  `;
+  petalsEl.appendChild(p);
+}
+
+// ── PASSWORD ──
+const PASSWORD = 'iLoveYou';
+const pwInput = document.getElementById('pw-input');
+const unlockBtn = document.getElementById('unlock-btn');
+const pwHint = document.getElementById('pw-hint');
+
+function tryUnlock() {
+  if (pwInput.value === PASSWORD) {
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('chat-screen').style.display = 'block';
+    startReplay();
+  } else {
+    pwHint.textContent = 'try again 💔';
+    pwInput.classList.add('shake');
+    pwInput.value = '';
+    setTimeout(() => { pwInput.classList.remove('shake'); pwHint.textContent=''; }, 900);
+  }
+}
+unlockBtn.addEventListener('click', tryUnlock);
+pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+
+// ── MESSAGES ──
+const messages = [
+  { side: 'me',  name: 'Eric',  text: "hey you're Emilie's friend right? Chris told me abt you", timestamp: 'OCT 21 AT 3:49 PM' },
+  { side: 'her', name: 'Kathy', text: 'wait did Emilie tell you abt me too?', timestamp: null },
+  { side: 'her', name: 'Kathy', text: 'hii', timestamp: 'OCT 21 AT 5:28 PM' },
+  { side: 'her', name: 'Kathy', text: 'yea emilie told me abt u', timestamp: null },
+  { side: 'her', name: 'Kathy', text: 'sorry i js saw ur text 😅', timestamp: null },
+];
+
+const chatWindow = document.getElementById('chat-window');
+const typingDots = document.getElementById('typing-dots');
+let replayTimeout = [];
+
+function clearReplay() {
+  replayTimeout.forEach(clearTimeout);
+  replayTimeout = [];
+}
+
+function typeMessage(bubble, text, cb) {
+  bubble.classList.add('typing');
+  let i = 0;
+  bubble.textContent = '';
+  function typeChar() {
+    if (i < text.length) {
+      bubble.textContent += text[i++];
+      replayTimeout.push(setTimeout(typeChar, 28 + Math.random()*22));
+    } else {
+      bubble.classList.remove('typing');
+      if (cb) cb();
+    }
+  }
+  typeChar();
+}
+
+function startReplay() {
+  // clear old messages except typing dots
+  Array.from(chatWindow.children).forEach(el => {
+    if (el !== typingDots) el.remove();
+  });
+  document.getElementById('ending-note').style.display = 'none';
+  document.getElementById('restart-btn').style.display = 'none';
+
+  let delay = 400;
+
+  messages.forEach((msg, idx) => {
+    const isHer = msg.side === 'her';
+    const msgDelay = delay;
+
+    // timestamp
+    if (msg.timestamp) {
+      const tsDelay = delay;
+      replayTimeout.push(setTimeout(() => {
+        const ts = document.createElement('div');
+        ts.className = 'timestamp';
+        ts.textContent = msg.timestamp;
+        chatWindow.insertBefore(ts, typingDots);
+      }, tsDelay));
+      delay += 300;
+    }
+
+    // show typing indicator for "her" messages
+    const showTyping = isHer;
+    const typingDuration = 600 + msg.text.length * 18;
+
+    if (showTyping) {
+      replayTimeout.push(setTimeout(() => {
+        typingDots.style.display = 'flex';
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      }, delay));
+      delay += typingDuration;
+      replayTimeout.push(setTimeout(() => {
+        typingDots.style.display = 'none';
+      }, delay));
+    }
+
+    // create bubble
+    replayTimeout.push(setTimeout(() => {
+      const msgEl = document.createElement('div');
+      msgEl.className = `msg ${msg.side}`;
+
+      const nameEl = document.createElement('div');
+      nameEl.className = 'sender-name';
+      nameEl.textContent = msg.name;
+
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+
+      msgEl.appendChild(nameEl);
+      msgEl.appendChild(bubble);
+      chatWindow.insertBefore(msgEl, typingDots);
+      msgEl.classList.add('visible');
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+
+      typeMessage(bubble, msg.text, () => {
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+        if (idx === messages.length - 1) {
+          setTimeout(() => {
+            document.getElementById('ending-note').style.display = 'block';
+            document.getElementById('restart-btn').style.display = 'block';
+          }, 800);
+        }
+      });
+    }, delay));
+
+    delay += 500 + msg.text.length * 20;
+  });
+}
+
+document.getElementById('restart-btn').addEventListener('click', () => {
+  clearReplay();
+  startReplay();
+});
+</script>
+</body>
+</html>
