@@ -609,8 +609,8 @@ function spawnBubbles(){
   reasons.forEach((r,i)=>{
     setTimeout(()=>{
       const b=document.createElement('div');b.className='bubble-reason';
-      b.style.cssText=`width:${r.size}px;height:${r.size}px;left:${positions[i].left};top:${positions[i].top};background:${r.color};box-shadow:0 6px 24px rgba(0,0,0,.08);animation-duration:${3+i*.4}s;animation-delay:${floatDelays[i]}s;`;
-      b.textContent=r.text;
+      b.style.cssText=`width:${r.size}px;height:${r.size}px;left:${positions[i].left};top:${positions[i].top};background:${r.color};box-shadow:0 6px 24px rgba(0,0,0,.08);animation-duration:${3+i*.4}s;animation-delay:${floatDelays[i]}s;font-size:1.6rem;`;
+      b.textContent=r.icon;
       container.appendChild(b);
       requestAnimationFrame(()=>requestAnimationFrame(()=>b.classList.add('spawned')));
       b.addEventListener('click',e=>{
