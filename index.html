@@ -67,24 +67,14 @@ font-family:‘Playfair Display’,serif;font-style:italic;font-size:2.6rem;font
 background:linear-gradient(180deg,rgba(200,80,130,.92) 0%,rgba(180,60,110,.7) 50%,rgba(210,100,150,.85) 100%);
 -webkit-background-clip:text;-webkit-text-fill-color:transparent;
 background-clip:text;
-filter:drop-shadow(0 0 8px rgba(212,96,122,.3));
-visibility:hidden;
+filter:blur(2px) drop-shadow(0 0 8px rgba(212,96,122,.3));
+opacity:0;transform:translateY(18px) scale(.97);
+transition:opacity .8s cubic-bezier(.25,.46,.45,.94),transform .8s cubic-bezier(.25,.46,.45,.94),filter .8s cubic-bezier(.25,.46,.45,.94);
 white-space:nowrap;}
-.hello-cycle .hello-word .hl{display:inline-block;opacity:0;}
-.hello-cycle .hello-word.active{visibility:visible;
-filter:drop-shadow(0 1px 12px rgba(212,96,122,.35)) drop-shadow(0 0 30px rgba(212,96,122,.12));}
-.hello-cycle .hello-word.active .hl{animation:letterBounce .55s cubic-bezier(.34,1.56,.64,1) both;}
-.hello-cycle .hello-word.exit{visibility:visible;}
-.hello-cycle .hello-word.exit .hl{animation:letterExit .35s ease-in both;}
-@keyframes letterBounce{
-0%{opacity:0;transform:translateY(18px) scale(.6);}
-40%{opacity:1;transform:translateY(-6px) scale(1.08);}
-65%{transform:translateY(2px) scale(.97);}
-85%{transform:translateY(-1px) scale(1.02);}
-100%{opacity:1;transform:translateY(0) scale(1);}}
-@keyframes letterExit{
-0%{opacity:1;transform:translateY(0) scale(1);}
-100%{opacity:0;transform:translateY(-14px) scale(.8);}}
+.hello-cycle .hello-word.active{opacity:1;transform:translateY(0) scale(1);
+filter:blur(0) drop-shadow(0 1px 12px rgba(212,96,122,.35)) drop-shadow(0 0 30px rgba(212,96,122,.12));}
+.hello-cycle .hello-word.exit{opacity:0;transform:translateY(-18px) scale(.97);
+filter:blur(2px) drop-shadow(0 0 8px rgba(212,96,122,.3));}
 .s1-sub{font-size:.75rem;letter-spacing:2.5px;text-transform:uppercase;color:#c09aaa;
 margin-bottom:2.2rem;font-weight:300;
 animation:titleDrop .9s cubic-bezier(.23,1,.32,1) .25s both;}
@@ -513,35 +503,17 @@ const ilyPhrases=[...ilyFixed,...ilyRest];
   ilyPhrases.forEach((t,i)=>{
     const el=document.createElement('span');
     el.className='hello-word'+(i===0?' active':'');
-    el.innerHTML=t.split('').map((c,ci)=>
-      c===' '?'<span class="hl" style="animation-delay:'+ci*30+'ms">&nbsp;</span>'
-      :'<span class="hl" style="animation-delay:'+ci*30+'ms">'+c+'</span>').join('');
+    el.textContent=t;
     box.appendChild(el);
   });
   let idx=0;
-  function wrapLetters(el,txt){
-    el.innerHTML=txt.split('').map((c,ci)=>
-      c===' '?'<span class="hl" style="animation-delay:'+ci*35+'ms">&nbsp;</span>'
-      :'<span class="hl" style="animation-delay:'+ci*35+'ms">'+c+'</span>').join('');
-  }
   setInterval(()=>{
     const words=box.querySelectorAll('.hello-word');
-    const cur=words[idx];
-    cur.classList.remove('active');
-    cur.classList.add('exit');
-    cur.querySelectorAll('.hl').forEach((l,i)=>{l.style.animationDelay=i*25+'ms';});
-    setTimeout(()=>{cur.classList.remove('exit');cur.querySelectorAll('.hl').forEach(l=>{l.style.opacity='0';l.style.animation='none';});},800);
+    words[idx].classList.remove('active');
+    words[idx].classList.add('exit');
+    setTimeout(()=>words[idx].classList.remove('exit'),800);
     idx=(idx+1)%words.length;
-    setTimeout(()=>{
-      const nxt=words[idx];
-      nxt.querySelectorAll('.hl').forEach((l,i)=>{
-        l.style.animation='none';
-        void l.offsetWidth;
-        l.style.animation='';
-        l.style.animationDelay=i*35+'ms';
-      });
-      nxt.classList.add('active');
-    },200);
+    setTimeout(()=>{words[idx].classList.add('active');},150);
   },2600);
 })();
 
