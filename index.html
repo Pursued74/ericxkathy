@@ -51,7 +51,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:999;
 /* ── SCREENS ── */
 .screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;
   opacity:0;pointer-events:none;transition:opacity .6s ease,transform .6s ease;z-index:5;will-change:opacity,transform;
-  transform:scale(.98);}
+  transform:scale(.98);padding-top:48px;}
 .screen.active{opacity:1;pointer-events:all;transform:scale(1);}
 .screen.bloom-in{animation:bloomIn .65s cubic-bezier(.23,1,.32,1) both;}
 @keyframes bloomIn{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
@@ -241,6 +241,59 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:999;
 
 /* ── SCREEN 5: LETTER ── */
 #s5{background:linear-gradient(160deg,#fdf0e8 0%,#fce8f0 100%);flex-direction:column;padding:1.5rem;overflow:hidden;}
+
+/* ── TAB BAR ── */
+.tab-bar{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;
+  background:rgba(253,248,242,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(212,96,122,.12);
+  opacity:0;pointer-events:none;transition:opacity .4s;height:48px;}
+.tab-bar.show{opacity:1;pointer-events:all;}
+.tab-btn{flex:1;background:none;border:none;cursor:pointer;font-family:'Jost',sans-serif;
+  font-size:.78rem;letter-spacing:1.5px;text-transform:uppercase;color:#c09aaa;
+  position:relative;transition:color .25s;}
+.tab-btn.active{color:var(--pink-deep);}
+.tab-btn::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;
+  background:var(--pink-deep);border-radius:2px 2px 0 0;transform:scaleX(0);transition:transform .3s cubic-bezier(.23,1,.32,1);}
+.tab-btn.active::after{transform:scaleX(1);}
+
+/* ── BOBA PANEL ── */
+#boba-panel{position:fixed;inset:0;z-index:10;background:linear-gradient(160deg,#e8f5e8 0%,#fce8f3 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  padding:calc(48px + 2rem) 1.5rem 1.5rem;gap:1rem;
+  opacity:0;pointer-events:none;transition:opacity .4s;}
+#boba-panel.show{opacity:1;pointer-events:all;}
+.boba-title{font-family:'Playfair Display',serif;font-style:italic;font-size:2rem;color:var(--pink-deep);}
+.boba-subtitle{font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:#c09aaa;font-weight:300;}
+.boba-btn{background:var(--pink-deep);color:white;border:none;border-radius:50px;padding:.85rem 2.2rem;
+  font-family:'Jost',sans-serif;font-size:.9rem;letter-spacing:1px;cursor:pointer;
+  box-shadow:0 6px 20px rgba(212,96,122,.35);transition:all .25s ease;}
+.boba-btn:hover{background:#c05070;transform:translateY(-1px);}
+.boba-btn:active{transform:scale(.97);}
+.boba-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.boba-search-row{display:flex;gap:.6rem;width:100%;max-width:380px;}
+.boba-search-input{flex:1;border:1.5px solid rgba(212,96,122,.25);border-radius:50px;
+  padding:.75rem 1.2rem;font-family:'Jost',sans-serif;font-size:.9rem;color:var(--text);
+  background:white;outline:none;transition:border-color .2s;}
+.boba-search-input:focus{border-color:var(--pink-deep);}
+.boba-status{font-size:.8rem;color:#c09aaa;text-align:center;min-height:1.2em;}
+#boba-map{width:100%;flex:1;min-height:0;border-radius:20px;overflow:hidden;display:none;
+  box-shadow:0 8px 32px rgba(0,0,0,.12);}
+#boba-map.show{display:block;}
+/* strip leaflet's default divIcon box */
+.leaflet-div-icon{background:transparent!important;border:none!important;box-shadow:none!important;}
+/* you-are-here pulse */
+.you-here-dot{width:16px;height:16px;background:#d4607a;border:2.5px solid white;border-radius:50%;
+  position:relative;box-shadow:0 2px 8px rgba(212,96,122,.5);}
+.you-here-pulse{position:absolute;inset:-8px;border-radius:50%;background:rgba(212,96,122,.25);
+  animation:youpulse 2s ease-out infinite;}
+@keyframes youpulse{0%{transform:scale(.6);opacity:.8;}100%{transform:scale(2.2);opacity:0;}}
+/* boba marker */
+.boba-pin{width:34px;height:34px;background:#d4607a;border-radius:50%;border:2.5px solid white;
+  display:flex;align-items:center;justify-content:center;font-size:17px;
+  box-shadow:0 3px 10px rgba(212,96,122,.55);cursor:pointer;}
+@keyframes pinDrop{0%{transform:scale(0) translateY(-8px);opacity:0;}
+  70%{transform:scale(1.15) translateY(2px);}100%{transform:scale(1) translateY(0);opacity:1;}}
+.pin-pop{animation:pinDrop .4s cubic-bezier(.23,1,.32,1) both;}
 .letter-wrap{width:100%;max-width:520px;display:flex;flex-direction:column;align-items:center;gap:1rem;}
 
 /* wax seal animation */
@@ -450,6 +503,24 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:999;
   </div>
 </div>
 
+<!-- TAB BAR -->
+<div class="tab-bar" id="tab-bar">
+  <button class="tab-btn active" id="tab-main" onclick="switchTab('main')">for kathy 🌸</button>
+  <button class="tab-btn" id="tab-boba" onclick="switchTab('boba')">boba near me 🧋</button>
+</div>
+
+<!-- BOBA PANEL -->
+<div id="boba-panel">
+  <div class="boba-title">boba near me</div>
+  <div class="boba-subtitle">find your next fix</div>
+  <div class="boba-search-row">
+    <input class="boba-search-input" id="boba-search" type="text" value="boba" placeholder="boba, milk tea, bubble tea..." />
+    <button class="boba-btn" id="boba-btn" onclick="findBoba()">search</button>
+  </div>
+  <div class="boba-status" id="boba-status"></div>
+  <div id="boba-map"></div>
+</div>
+
 <!-- NAV -->
 <div class="nav-bar" id="nav-bar">
   <button class="nav-arrow" id="nav-prev" disabled>← back</button>
@@ -548,7 +619,7 @@ function tryUnlock(){
     const btn=document.getElementById('pw-btn');
     btn.classList.add('success');
     btn.textContent='✓ opening...';
-    setTimeout(()=>goTo(1),600);
+    setTimeout(()=>{goTo(1);tabBar.classList.add('show');},600);
   } else {
     const inp=document.getElementById('pw-input');
     document.getElementById('pw-hint').textContent='try again 💔';
@@ -823,6 +894,153 @@ musicToggle.addEventListener('click',()=>{
   }
   musicPlaying=!musicPlaying;
 });
+
+// ── TAB BAR ──
+const tabBar=document.getElementById('tab-bar');
+const bobaPanel=document.getElementById('boba-panel');
+let activeTab='main';
+function switchTab(tab){
+  activeTab=tab;
+  document.getElementById('tab-main').classList.toggle('active',tab==='main');
+  document.getElementById('tab-boba').classList.toggle('active',tab==='boba');
+  bobaPanel.classList.toggle('show',tab==='boba');
+  // hide/show nav + dots when on boba tab
+  navBar.classList.toggle('show',tab==='main'&&cur>0);
+  pageDots.classList.toggle('show',tab==='main'&&cur>0);
+}
+
+// ── BOBA MAP ──
+let bobaLeafletLoaded=false;
+let bobaMapInstance=null;
+
+function findBoba(){
+  const btn=document.getElementById('boba-btn');
+  const status=document.getElementById('boba-status');
+  const mapDiv=document.getElementById('boba-map');
+  const query=(document.getElementById('boba-search')?.value||'boba').trim()||'boba';
+  if(!navigator.geolocation){status.textContent='geolocation not supported on this device 😢';return;}
+  btn.disabled=true;
+  status.textContent='finding your location...';
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const lat=pos.coords.latitude,lng=pos.coords.longitude;
+    status.textContent='loading map...';
+    mapDiv.classList.add('show');
+    if(!bobaLeafletLoaded){
+      bobaLeafletLoaded=true;
+      const css=document.createElement('link');
+      css.rel='stylesheet';css.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      document.head.appendChild(css);
+      const js=document.createElement('script');
+      js.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+      js.onload=()=>initBobaMap(lat,lng,query,mapDiv,status,btn);
+      document.head.appendChild(js);
+    } else {
+      initBobaMap(lat,lng,query,mapDiv,status,btn);
+    }
+  },()=>{
+    btn.disabled=false;
+    status.textContent='couldn\'t get location — please allow location access 🥺';
+  },{timeout:10000});
+}
+
+function resetBoba(){
+  // properly destroy leaflet before clearing DOM
+  if(bobaMapInstance){bobaMapInstance.remove();bobaMapInstance=null;}
+  const btn=document.getElementById('boba-btn');
+  const mapDiv=document.getElementById('boba-map');
+  mapDiv.classList.remove('show');
+  mapDiv.innerHTML='';
+  document.getElementById('boba-status').textContent='';
+  btn.textContent='search';btn.disabled=false;btn.onclick=findBoba;
+}
+
+function initBobaMap(lat,lng,searchQuery,mapDiv,status,btn){
+  // destroy any existing instance first
+  if(bobaMapInstance){bobaMapInstance.remove();bobaMapInstance=null;}
+  mapDiv.innerHTML='';
+  const map=L.map(mapDiv,{zoomControl:false,attributionControl:false}).setView([lat,lng],10);
+  bobaMapInstance=map;
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{
+    maxZoom:19,attribution:'© OpenStreetMap © CARTO'}).addTo(map);
+  setTimeout(()=>map.flyTo([lat,lng],13,{duration:1.6,easeLinearity:0.2}),100);
+  // pulsing you-are-here dot
+  const youIcon=L.divIcon({className:'',
+    html:'<div class="you-here-dot"><div class="you-here-pulse"></div></div>',
+    iconSize:[16,16],iconAnchor:[8,8]});
+  L.marker([lat,lng],{icon:youIcon,zIndexOffset:1000}).addTo(map);
+  status.textContent=`searching for "${searchQuery}" nearby...`;
+  const d=0.13;
+  const viewbox=`${lng-d},${lat+d},${lng+d},${lat-d}`;
+  const url=`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&bounded=1&viewbox=${viewbox}&limit=40&dedupe=1&addressdetails=0`;
+  fetch(url,{headers:{'Accept-Language':'en'}})
+    .then(r=>r.json())
+    .then(results=>{
+      if(!results.length){
+        status.textContent=`no results for "${searchQuery}" nearby 😢`;
+        btn.disabled=false;btn.textContent='try again';return;
+      }
+      // parse results, sort by distance, cap at 8 closest
+      const dist=(a,b,c,d)=>{const R=6371,dL=(c-a)*Math.PI/180,dG=(d-b)*Math.PI/180,x=Math.sin(dL/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dG/2)**2;return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));};
+      const items=results
+        .map(r=>({slat:parseFloat(r.lat),slng:parseFloat(r.lon),name:r.display_name.split(',')[0]}))
+        .filter(({slat,slng})=>!isNaN(slat)&&!isNaN(slng))
+        .sort((a,b)=>dist(lat,lng,a.slat,a.slng)-dist(lat,lng,b.slat,b.slng))
+        .slice(0,8);
+      if(!items.length){status.textContent='no results found nearby 😢';btn.disabled=false;btn.textContent='try again';return;}
+      const bounds=L.latLngBounds([[lat,lng]]);
+      items.forEach(({slat,slng})=>bounds.extend([slat,slng]));
+      const bobaIcon=L.divIcon({className:'',html:'<div class="boba-pin">🧋</div>',iconSize:[34,34],iconAnchor:[17,17],popupAnchor:[0,-20]});
+      status.textContent='getting directions...';
+      // fetch all OSRM routes in parallel (road-following, free, no API key)
+      Promise.all(items.map(({slat,slng})=>
+        fetch(`https://router.project-osrm.org/route/v1/driving/${lng},${lat};${slng},${slat}?overview=full&geometries=geojson`)
+          .then(r=>r.json()).catch(()=>null)
+      )).then(routes=>{
+        items.forEach(({slat,slng,name},i)=>{
+          setTimeout(()=>{
+            // draw road-following route using L.polyline (reliable SVG access)
+            const rd=routes[i];
+            if(rd?.code==='Ok'&&rd.routes.length){
+              const coords=rd.routes[0].geometry.coordinates.map(([a,b])=>[b,a]);
+              const line=L.polyline(coords,{color:'#3ea8d8',weight:4.5,opacity:0,lineCap:'round',lineJoin:'round'}).addTo(map);
+              requestAnimationFrame(()=>{
+                const p=line.getElement();
+                if(p){
+                  const len=p.getTotalLength();
+                  p.style.strokeDasharray=len;
+                  p.style.strokeDashoffset=len;
+                  p.style.transition='stroke-dashoffset 0.8s cubic-bezier(.4,0,.2,1), opacity 0.2s';
+                  requestAnimationFrame(()=>{p.style.strokeDashoffset='0';p.style.opacity='0.85';});
+                }
+              });
+            }
+            // marker pops after route finishes drawing
+            setTimeout(()=>{
+              const m=L.marker([slat,slng],{icon:bobaIcon})
+                .addTo(map).bindPopup(`<b>${name}</b>`,{closeButton:false});
+              const el=m.getElement();
+              if(el){
+                const pin=el.querySelector('.boba-pin');
+                if(pin)pin.classList.add('pin-pop');
+              }
+            },750);
+          },i*180);
+        });
+        setTimeout(()=>{
+          map.flyToBounds(bounds,{padding:[60,60],duration:1.4,easeLinearity:0.2,maxZoom:13});
+          status.textContent=`found ${items.length} boba shop${items.length>1?'s':''} nearby 🧋`;
+          btn.disabled=false;btn.textContent='refresh';btn.onclick=()=>resetBoba();
+        },items.length*180+900);
+      }).catch(()=>{
+        status.textContent='couldn\'t get directions — showing shops only';
+        btn.disabled=false;btn.textContent='refresh';btn.onclick=()=>resetBoba();
+      });
+    })
+    .catch(()=>{
+      status.textContent='couldn\'t load results — check your connection';
+      btn.disabled=false;btn.textContent='try again';
+    });
+}
 </script>
 </body>
 </html>
